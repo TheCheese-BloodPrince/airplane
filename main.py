@@ -59,6 +59,11 @@ async def back(ctx):
 async def purge(ctx, amount):
   await ctx.channel.purge(limit=int(amount))
 
+#+dev
+@bot.command(name='dev', description="Gives people the link to the GitHub so they can help build the bot.")
+async def dev(ctx):
+  ctx.send("Thank you for your interest in helping **airplane**! You can help the **airplane** project here: https://github.com/TheCheese-BloodPrince/airplane")
+
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
