@@ -54,6 +54,10 @@ async def back(ctx):
   await ctx.author.edit(nick=db[str(ctx.author.id)+"_nick"])
   await ctx.send("**"+ctx.author.name+"** is back! *attempts to smile*")
 
+#+purge
+@bot.command(name='purge', description="Purges a certain amount of messages.")
+async def purge(ctx, amount):
+  await ctx.channel.purge(limit=int(amount))
 
 #Running the Bot
 keep_alive()
