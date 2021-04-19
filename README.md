@@ -6,3 +6,5 @@ Airplane is configured to run on Replit, but you could modify the code to make i
 Invite link: https://dsc.gg/airplane-invite
 
 You **do** have to have the pip library SlashCommands installed. Run the script in installs.sh in your workspace to get it installed.
+
+The bot is meant to run on Python 3.8.8, and will **not** work on Python 3.9.1, may run with some errors on earlier versions of Python. You can download Python 3.8.8 here: https://www.python.org/downloads/release/python-388/
