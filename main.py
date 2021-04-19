@@ -12,7 +12,7 @@ bot = commands.Bot(command_prefix=';')
 
 @bot.event
 async def on_ready():
-  print("nyooom has started up dun dun dun")
+  print("airplane has started up; Can now execute commands.")
 
 
 #Commands
