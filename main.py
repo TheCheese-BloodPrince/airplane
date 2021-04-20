@@ -86,11 +86,10 @@ async def unmute(ctx, member : discord.Member):
 @has_permissions(ban_members=True)
 async def unban(ctx, *, member):
   banned_users = await ctx.guild.bans()
-  member_name, member_disc = member.split("#")
   for banned_entry in banned_users:
     user = banned_entry.user
   
-  if(user.name, user.discriminator)==(member_name, member_disc):
+  if(user.name)==(member):
     await ctx.guild.unban(user)
     await ctx.send("**"+user.name+"** has been unbanned! Maybe they were good boi after all")
     return
