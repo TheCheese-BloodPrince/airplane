@@ -22,14 +22,17 @@ async def on_ready():
 #+kick
 @bot.command(name='kick', description='Kick a troublesome user.')
 @has_permissions(kick_members=True)  
-async def kick(ctx, member : discord.Member, *, reason=None):
+async def kick(ctx, member : discord.Member, *, reason="None"):
+  await member.send("You have been kicked in " + ctx.guild.name + " for: " + reason + ". You can rejoin if you obtain an invite.")
   await member.kick(reason = reason)
 
 #+ban
 @bot.command(name='ban', description = 'Ban a troublesome user.')
 @has_permissions(ban_members=True)
 async def ban(ctx, member : discord.Member, *, reason="None"):
+  await member.send("You have been banned in " + ctx.guild.name + " for: " + reason + ". You cannot rejoin unless unbanned.")
   await member.ban(reason=reason)
+  await ctx.send("**" + member.name + "** has been banned for: " + reason + ". They cannot join the server unless unbanned.")
 
 #+info
 @bot.command(name='info', description='Information about airplane.')
@@ -68,9 +71,10 @@ async def dev(ctx):
 #+mute
 @bot.command(name='mute', description="Mutes a user SHUT THE HELL UP")
 @has_permissions(manage_messages=True)
-async def mute(ctx, member : discord.Member):
+async def mute(ctx, member : discord.Member, *, reason="None"):
   muted = discord.utils.get(ctx.guild.roles, name="Muted")
   await member.add_roles(muted)
+  await member.send("You have been muted in " + ctx.guild.name + " for: " + reason + ". You cannot talk there until unmuted.")
   await ctx.send("Muted **"+member.name+"**")
 
 #+unmute
@@ -79,6 +83,7 @@ async def mute(ctx, member : discord.Member):
 async def unmute(ctx, member : discord.Member):
   muted = discord.utils.get(ctx.guild.roles, name="Muted")
   await member.remove_roles(muted)
+  await member.send("You have been unmuted in " + ctx.guild.name + ". You can now talk there.")
   await ctx.send("**"+member.name+"** has been unmuted.")
 
 #unban
@@ -95,7 +100,20 @@ async def unban(ctx, *, member):
     return
   await ctx.send("Member not found")
 
-
+#tempban
+@bot.command(name='tempban', description="Allows you to ban and then immediatly unban a user to delete all their messages in the past 24 hours.")
+@has_permissions(kick_members=True)
+async def tempban(ctx, member : discord.Member):
+  await member.send("You have been temporarily banned in " + ctx.guild.name + " to wipe all your messages in the past 24 hours. Ask an admin to give you an invite as you have now been unbanned.")
+  await ctx.guild.ban(member)
+  banned_users = await ctx.guild.bans()
+  for banned_entry in banned_users:
+    user = banned_entry.user
+  
+  if(user.name)==(member.name):
+    await ctx.guild.unban(user)
+    return
+  await ctx.send("**"+member.name+"**'s messages in the past 24 hours have been deleted.'")
 
 #Running the Bot
 keep_alive()
