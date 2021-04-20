@@ -28,7 +28,7 @@ async def kick(ctx, member : discord.Member, *, reason=None):
 #+ban
 @bot.command(name='ban', description = 'Ban a troublesome user.')
 @has_permissions(ban_members=True)
-async def ban(ctx, member : discord.Member, *, reason=None):
+async def ban(ctx, member : discord.Member, *, reason="None"):
   await member.ban(reason=reason)
 
 #+info
@@ -80,6 +80,23 @@ async def unmute(ctx, member : discord.Member):
   muted = discord.utils.get(ctx.guild.roles, name="Muted")
   await member.remove_roles(muted)
   await ctx.send("**"+member.name+"** has been unmuted.")
+
+#unban
+@bot.command(name='unban', description="Allows you to unban a user maybe they were good boi after all")
+@has_permissions(ban_members=True)
+async def unban(ctx, *, member):
+  banned_users = await ctx.guild.bans()
+  member_name, member_disc = member.split("#")
+  for banned_entry in banned_users:
+    user = banned_entry.user
+  
+  if(user.name, user.discriminator)==(member_name, member_disc):
+    await ctx.guild.unban(user)
+    await ctx.send("**"+user.name+"** has been unbanned! Maybe they were good boi after all")
+    return
+  await ctx.send("Member not found")
+
+
 
 #Running the Bot
 keep_alive()
