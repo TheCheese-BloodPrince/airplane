@@ -129,6 +129,13 @@ async def tempban(ctx, member : discord.Member):
     await ctx.guild.unban(user)
   await ctx.send("**"+member.name+"**'s messages in the past 24 hours have been deleted.'")
 
+#warn
+@bot.command(name='warn', description="Allows you to warn a user.")
+@has_permissions(kick_members=True)
+@commands.cooldown(100,86400,commands.BucketType.guild)
+async def warn(ctx, member : discord.Member , *, reason):
+  db[str(ctx.guild.id)+"_"+str(member.id)+"_warnings"] = db[str(ctx.guild.id)+"_"+str(member.id)+"_warnings"] + ("||Warn: " + reason + " Moderator: " + ctx.author.name + "|| ** **")
+  await ctx.send(db[str(ctx.guild.id)+"_"+str(member.id)+"_warnings"])
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
