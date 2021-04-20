@@ -40,11 +40,11 @@ async def info(ctx):
 @bot.command(name='afk', description='Sets the user to afk.')
 async def afk(ctx, reason):
   if ctx.author.nick == None:
-    await ctx.author.edit(nick=("["+reason+"]"+ctx.author.name))
+    await ctx.author.edit(nick=("[AFK]"+ctx.author.name))
     db[str(ctx.author.id)+"_nick"] = ctx.author.name
   else:
     previousNick = ctx.author.nick
-    await ctx.author.edit(nick=("["+reason+"]"+previousNick))
+    await ctx.author.edit(nick=("[AFK]"+previousNick))
     db[str(ctx.author.id)+"_nick"] = ctx.author.nick
   await ctx.send("**"+ctx.author.name+"** is AFK: " + reason)
 
@@ -62,8 +62,13 @@ async def purge(ctx, amount):
 #+dev
 @bot.command(name='dev', description="Gives people the link to the GitHub so they can help build the bot.")
 async def dev(ctx):
-  ctx.send("Thank you for your interest in helping **airplane**! You can help the **airplane** project here: https://github.com/TheCheese-BloodPrince/airplane")
+  ctx.send("Thank you for your interest in helping airplane! You can help the airplane project here: https://github.com/TheCheese-BloodPrince/airplane")
 
+#+mute
+@bot.command(name='mute', description="Allows a moderator to mute a user.")
+@commands.has_permissions(kick_members=True)
+async def mute(ctx, member : discord.Member):
+  muted_role = ctx.guild.get_role()
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
