@@ -22,13 +22,16 @@ async def on_ready():
 #+kick
 @bot.command(name='kick', description='Kick a troublesome user.')
 @has_permissions(kick_members=True)  
+@commands.cooldown(100,86400,commands.BucketType.guild)
 async def kick(ctx, member : discord.Member, *, reason="None"):
   await member.send("You have been kicked in " + ctx.guild.name + " for: " + reason + ". You can rejoin if you obtain an invite.")
   await member.kick(reason = reason)
+  await ctx.send("Kicked **" + member.name + "** for: " + reason + ". They can join if they manage to obtain an invite.")
 
 #+ban
 @bot.command(name='ban', description = 'Ban a troublesome user.')
 @has_permissions(ban_members=True)
+@commands.cooldown(100,86400,commands.BucketType.guild)
 async def ban(ctx, member : discord.Member, *, reason="None"):
   await member.send("You have been banned in " + ctx.guild.name + " for: " + reason + ". You cannot rejoin unless unbanned.")
   await member.ban(reason=reason)
@@ -36,11 +39,15 @@ async def ban(ctx, member : discord.Member, *, reason="None"):
 
 #+info
 @bot.command(name='info', description='Information about airplane.')
+@commands.cooldown(1,5,commands.BucketType.user)
 async def info(ctx):
-  ctx.send("airplane is an open-source Discord moderation/economy bot made by The Cheese-Blood Prince#0505.")
+  await ctx.send("airplane is a Discord bot by The Cheese-Blood Prince#0505")
+  await ctx.send("Contributors:")
+  await ctx.send("https://github.com/TheCheese-BloodPrince")
 
 #+afk
 @bot.command(name='afk', description='Sets the user to afk.')
+@commands.cooldown(1,30,commands.BucketType.user)
 async def afk(ctx, *, reason):
   await ctx.send("**"+ctx.author.name+"** is AFK: " + reason)
   if ctx.author.nick == None:
@@ -54,6 +61,7 @@ async def afk(ctx, *, reason):
 
 #+back
 @bot.command(name='back', description="Removes the user's afk.")
+@commands.cooldown(1,30,commands.BucketType.user)
 async def back(ctx):
   await ctx.author.edit(nick=db[str(ctx.author.id)+"_nick"])
   await ctx.send("**"+ctx.author.name+"** is back! *attempts to smile*")
@@ -61,17 +69,20 @@ async def back(ctx):
 #+purge
 @bot.command(name='purge', description="Purges a certain amount of messages.")
 @has_permissions(manage_messages=True)
+@commands.cooldown(1,60,commands.BucketType.guild)
 async def purge(ctx, amount):
   await ctx.channel.purge(limit=int(amount))
 
 #+dev
 @bot.command(name='dev', description="Gives people the link to the GitHub so they can help build the bot.")
+@commands.cooldown(1,5,commands.BucketType.user)
 async def dev(ctx):
   await ctx.send("Thank you for your interest in helping airplane! You can help the airplane project here: https://github.com/TheCheese-BloodPrince/airplane")
 
 #+mute
 @bot.command(name='mute', description="Mutes a user SHUT THE HELL UP")
 @has_permissions(manage_messages=True)
+@commands.cooldown(100,86400,commands.BucketType.guild)
 async def mute(ctx, member : discord.Member, *, reason="None"):
   muted = discord.utils.get(ctx.guild.roles, name="Muted")
   await member.add_roles(muted)
@@ -81,6 +92,7 @@ async def mute(ctx, member : discord.Member, *, reason="None"):
 #+unmute
 @bot.command(name='unmute', description="Unmuted the user they have served their sentence.")
 @has_permissions(manage_messages=True)
+@commands.cooldown(100,86400,commands.BucketType.guild)
 async def unmute(ctx, member : discord.Member):
   muted = discord.utils.get(ctx.guild.roles, name="Muted")
   await member.remove_roles(muted)
@@ -90,6 +102,7 @@ async def unmute(ctx, member : discord.Member):
 #unban
 @bot.command(name='unban', description="Allows you to unban a user maybe they were good boi after all")
 @has_permissions(ban_members=True)
+@commands.cooldown(100,86400,commands.BucketType.guild)
 async def unban(ctx, *, member):
   banned_users = await ctx.guild.bans()
   for banned_entry in banned_users:
@@ -104,6 +117,7 @@ async def unban(ctx, *, member):
 #tempban
 @bot.command(name='tempban', description="Allows you to ban and then immediatly unban a user to delete all their messages in the past 24 hours.")
 @has_permissions(kick_members=True)
+@commands.cooldown(100,86400,commands.BucketType.guild)
 async def tempban(ctx, member : discord.Member):
   await member.send("You have been temporarily banned in " + ctx.guild.name + " to wipe all your messages in the past 24 hours. Ask an admin to give you an invite as you have now been unbanned.")
   await ctx.guild.ban(member)
@@ -113,7 +127,6 @@ async def tempban(ctx, member : discord.Member):
   
   if(user.name)==(member.name):
     await ctx.guild.unban(user)
-    return
   await ctx.send("**"+member.name+"**'s messages in the past 24 hours have been deleted.'")
 
 #Running the Bot
