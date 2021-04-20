@@ -42,6 +42,7 @@ async def info(ctx):
 #+afk
 @bot.command(name='afk', description='Sets the user to afk.')
 async def afk(ctx, *, reason):
+  await ctx.send("**"+ctx.author.name+"** is AFK: " + reason)
   if ctx.author.nick == None:
     await ctx.author.edit(nick=("[AFK]"+ctx.author.name))
     db[str(ctx.author.id)+"_nick"] = ctx.author.name
@@ -49,7 +50,7 @@ async def afk(ctx, *, reason):
     previousNick = ctx.author.nick
     await ctx.author.edit(nick=("[AFK]"+previousNick))
     db[str(ctx.author.id)+"_nick"] = ctx.author.nick
-  await ctx.send("**"+ctx.author.name+"** is AFK: " + reason)
+  
 
 #+back
 @bot.command(name='back', description="Removes the user's afk.")
