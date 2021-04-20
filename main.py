@@ -38,7 +38,7 @@ async def info(ctx):
 
 #+afk
 @bot.command(name='afk', description='Sets the user to afk.')
-async def afk(ctx, reason):
+async def afk(ctx, *, reason):
   if ctx.author.nick == None:
     await ctx.author.edit(nick=("[AFK]"+ctx.author.name))
     db[str(ctx.author.id)+"_nick"] = ctx.author.name
@@ -56,19 +56,31 @@ async def back(ctx):
 
 #+purge
 @bot.command(name='purge', description="Purges a certain amount of messages.")
+@has_permissions(manage_messages=True)
 async def purge(ctx, amount):
   await ctx.channel.purge(limit=int(amount))
 
 #+dev
 @bot.command(name='dev', description="Gives people the link to the GitHub so they can help build the bot.")
 async def dev(ctx):
-  ctx.send("Thank you for your interest in helping airplane! You can help the airplane project here: https://github.com/TheCheese-BloodPrince/airplane")
+  await ctx.send("Thank you for your interest in helping airplane! You can help the airplane project here: https://github.com/TheCheese-BloodPrince/airplane")
 
 #+mute
-@bot.command(name='mute', description="Allows a moderator to mute a user.")
-@commands.has_permissions(kick_members=True)
+@bot.command(name='mute', description="Mutes a user SHUT THE HELL UP")
+@has_permissions(manage_messages=True)
 async def mute(ctx, member : discord.Member):
-  muted_role = ctx.guild.get_role()
+  muted = discord.utils.get(ctx.guild.roles, name="Muted")
+  await member.add_roles(muted)
+  await ctx.send("Muted **"+member.name+"**")
+
+#+unmute
+@bot.command(name='unmute', description="Unmuted the user they have served their sentence.")
+@has_permissions(manage_messages=True)
+async def unmute(ctx, member : discord.Member):
+  muted = discord.utils.get(ctx.guild.roles, name="Muted")
+  await member.remove_roles(muted)
+  await ctx.send("**"+member.name+"** has been unmuted.")
+
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
