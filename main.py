@@ -100,7 +100,7 @@ async def unmute(ctx, member : discord.Member):
   await member.send("You have been unmuted in " + ctx.guild.name + ". You can now talk there.")
   await ctx.send("**"+member.name+"** has been unmuted.")
 
-#unban
+#+unban
 @bot.command(name='unban', description="Allows you to unban a user maybe they were good boi after all")
 @has_permissions(ban_members=True)
 @commands.cooldown(100,86400,commands.BucketType.guild)
@@ -115,7 +115,7 @@ async def unban(ctx, *, member):
     return
   await ctx.send("Member not found")
 
-#tempban
+#+tempban
 @bot.command(name='tempban', description="Allows you to ban and then immediatly unban a user to delete all their messages in the past 24 hours.")
 @has_permissions(kick_members=True)
 @commands.cooldown(100,86400,commands.BucketType.guild)
@@ -130,7 +130,7 @@ async def tempban(ctx, member : discord.Member):
     await ctx.guild.unban(user)
   await ctx.send("**"+member.name+"**'s messages in the past 24 hours have been deleted.'")
 
-#warn
+#+warn
 @bot.command(name='warn', description="Allows you to warn a user.")
 @has_permissions(kick_members=True)
 @commands.cooldown(100,86400,commands.BucketType.guild)
@@ -148,7 +148,7 @@ async def warn(ctx, member : discord.Member , *, reason="None"):
     await ctx.send(db[key])
   await member.send("You have been warned in **" + ctx.guild.name + "** for **" + reason + "** by **" + ctx.author.name + "**")
 
-#warnings
+#+warnings
 @bot.command(name='warnings', description="Checks the warnings of a user")
 @has_permissions(kick_members=True)
 @commands.cooldown(100,86400,commands.BucketType.guild)
@@ -156,7 +156,7 @@ async def warnings(ctx, member : discord.Member):
   key=(str(ctx.guild.id)+"_"+str(member.id)+"_warnings")
   await ctx.send(member.name + "'s warnings: " + db[key])
 
-#clearwarn
+#+clearwarn
 @bot.command(name='clearwarn', description='Clears a users warnings')
 @has_permissions(kick_members=True)
 @commands.cooldown(100,86400,commands.BucketType.guild)
@@ -165,17 +165,45 @@ async def clearwarn(ctx, member : discord.Member):
   del db[key]
   await ctx.send("Cleared **" + member.name + "**'s warnings")
 
-#avatar
+#+avatar
 @bot.command(name='avatar', description="Sends a user's avatar")
 @commands.cooldown(1,5, commands.BucketType.member)
 async def avatar(ctx):
   await ctx.send(ctx.author.avatar_url)
 
-#membercount
+#+membercount
 @bot.command(name='membercount', description="Sends the amount of members in the guild.")
 @commands.cooldown(1,5, commands.BucketType.member)
 async def membercount(ctx):
   await ctx.send("Members in **"+ctx.guild.name+"**: " + str(ctx.guild.member_count))
+
+#+hp99
+@bot.command(name='hp99', description="Sings Harry Potter in 99 Seconds by PAINT")
+@commands.cooldown(1,99,commands.BucketType.guild)
+async def hp99(ctx):
+  await ctx.send("THERE ONCE WAS A BOY NAMED HARRY DESTINED TO BE A STAR HIS PARENTS WERE KILLED BY VOLDEMORT WHO GAVE HIM HIS LIGHTNING SCAR YO HARRY YER A WIZARD DOODOODOODOODOODOODOODOODOODOOODOODOODOODOODOODOO HARRY GOES TO HOGWARTS HE MEETS RON AND HERMIONE MCGONAGALL REQUIRES THAT HE PLAYS FOR GRYFFINDOR DRACO IS A DADDY'S BOY QUIRRELL BECOMES UNEMPLOYED AND THE SORCERER'S STONE IS DESTROYED BY DUMBLEDORE")
+  await ctx.send("RON BREAKS HIS WAND NOW GINNY'S GONE AND HARRY'S IN MORTAL DANGER TOM RIDDLE HIDES HIS SNAKE INSIDE HIS GINORMOUS SECRET CHAMBER")
+  await ctx.send("HARRY BLOWS UP AUNT MARGE THE DEMENTORS COME AND TAKE CHARGE LUPIN IS A WOLF THE RAT'S A MAN AND NOW THE PRISONER IS AT LARGE THEY USE TIME TRAVEL SO THEY CAN SAVE THE PRISONER OF AZKABAN WHO JUST SO HAPPENS TO BE HARRY'S GODFATHER I DON'T REALLY GET IT EITHER")
+  await ctx.send("HARRY GETS PUT INTO THE TRIWIZARD TOURNAMENT DRAGONS AND MERMAIDS OH NO EDWARD CULLEN GETS SLAYED HE'S BACK")
+  await ctx.send("HARRY HARRY ITS GETTING SCARY VOLDEMORT'S BACK YOU'REA REVOLUTIONARY HARRY DUMBLEDORE DUMBLEDORE WHY IS HE IGNORING YOUR CONSTANT ATTEMPTS TO CONTACT HIM HE IS FORCED TO LEAVE THE SCHOOL UMBRIDGE ARRIVES DRACO'S A TOOL KIDS BREAK INTO THE MINISTRY AND SIRIUS BLACK IS DEAD AS CAN BE OHHHHHH")
+  await ctx.send("SPLIT YOUR SOUL SEVEN PARTS OF A WHOLE THEY'RE HORCRUXES IT'S DUMBELDORE'S END DOODOODOODOODOODOODOO")
+  await ctx.send("THERE ONCE WAS A BOY NAMED HARRY WHO CONSTANTLY CONQUERED DEATH BUT IN ONE FINAL DUEL BETWEEN GOOD AND BAD HE MAY TAKE HIS FINAL BREATH...")
+  await ctx.send("P A I N T SUBSCRIBE")
+
+#+never
+@bot.command(name='never', description="Sings Never Gonna Give you Up by Rick Astley")
+@commands.cooldown(1,212, commands.BucketType.guild)
+async def never(ctx):
+  await ctx.send(("We're no strangers to love You know the rules and so do I A full commitment's what I'm thinking of You wouldn't get this from any other guy").upper())
+  await ctx.send(("I just wanna tell you how I'm feeling Gotta make you understand").upper())
+  await ctx.send(("Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you").upper())
+  await ctx.send(("We've known each other for so long Your heart's been aching, but you're too shy to say it Inside, we both know what's been going on We know the game, and we're gonna play it").upper())
+  await ctx.send(("And if you ask me how I'm feeling Don't tell me you're too blind to see").upper())
+  await ctx.send(("Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you").upper())
+  await ctx.send(("Ooh (Give you up) Ooh-ooh (Give you up) Ooh-ooh Never gonna give, never gonna give (Give you up) Ooh-ooh Never gonna give, never gonna give (Give you up)").upper())
+  await ctx.send(("We've known each other for so long Your heart's been aching, but you're too shy to say it Inside, we both know what's been going on We know the game, and we're gonna play it").upper())
+  await ctx.send(("I just wanna tell you how I'm feeling Gotta make you understand").upper())
+  await ctx.send(("Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you").upper())
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
