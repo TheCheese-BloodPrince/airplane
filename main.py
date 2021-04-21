@@ -220,9 +220,12 @@ async def balance(ctx):
 #+give
 @bot.command(name='give', description="Allows a user to give another user money.")
 async def give(ctx, member : discord.Member, amount):
-  db[str(member.id)+"_bank"] += amount
-  db[str(ctx.author.id)+"_bank"] -= amount
-  await ctx.send("**" + ctx.author.name + "** has given **" + member.name + "** **" + str(amount) + "** coins.")
+  if int(amount) >= 0:
+    db[str(member.id)+"_bank"] += int(amount)
+    db[str(ctx.author.id)+"_bank"] -= int(amount)
+    await ctx.send("**" + ctx.author.name + "** has given **" + member.name + "** **" + str(amount) + "** coins.")
+  else:
+    await ctx.send("Did you really try that?")
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
