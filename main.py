@@ -164,6 +164,12 @@ async def clearwarn(ctx, member : discord.Member):
   key=(str(ctx.guild.id)+"_"+str(member.id)+"_warnings")
   del db[key]
   await ctx.send("Cleared **" + member.name + "**'s warnings")
+
+#avatar
+@bot.command(name='avatar', description="Sends a user's avatar")
+@commands.cooldown(1,5, commands.BucketType.member)
+async def avatar(ctx):
+  await ctx.send(ctx.author.avatar_url)
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
