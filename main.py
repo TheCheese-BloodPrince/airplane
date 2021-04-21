@@ -204,6 +204,25 @@ async def never(ctx):
   await ctx.send(("We've known each other for so long Your heart's been aching, but you're too shy to say it Inside, we both know what's been going on We know the game, and we're gonna play it").upper())
   await ctx.send(("I just wanna tell you how I'm feeling Gotta make you understand").upper())
   await ctx.send(("Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you").upper())
+
+#+register
+@bot.command(name='register', description="Registers you for a currency account in airplane. Remember this wipes your account balance to 0 coins.")
+async def register(ctx):
+  db[str(ctx.author.id)+"_bank"]=0
+  await ctx.send("Registered **" + ctx.author.name + "** for a currency account.")
+
+#+balance
+@bot.command(name='balance', description="Sends a user's balance.")
+async def balance(ctx):
+  userid = (str(ctx.author.id)+"_bank")
+  await ctx.send("**" + ctx.author.name + "** has " + str(db[userid]) + " coins.")
+
+#+give
+@bot.command(name='give', description="Allows a user to give another user money.")
+async def give(ctx, member : discord.Member, amount):
+  db[str(member.id)+"_bank"] += amount
+  db[str(ctx.author.id)+"_bank"] -= amount
+  await ctx.send("**" + ctx.author.name + "** has given **" + member.name + "** **" + str(amount) + "** coins.")
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
