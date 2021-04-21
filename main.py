@@ -63,8 +63,9 @@ async def afk(ctx, *, reason):
 @bot.command(name='back', description="Removes the user's afk.")
 @commands.cooldown(1,30,commands.BucketType.user)
 async def back(ctx):
-  await ctx.author.edit(nick=db[str(ctx.author.id)+"_nick"])
   await ctx.send("**"+ctx.author.name+"** is back! *attempts to smile*")
+  await ctx.author.edit(nick=db[str(ctx.author.id)+"_nick"])
+  
 
 #+purge
 @bot.command(name='purge', description="Purges a certain amount of messages.")
@@ -133,9 +134,35 @@ async def tempban(ctx, member : discord.Member):
 @bot.command(name='warn', description="Allows you to warn a user.")
 @has_permissions(kick_members=True)
 @commands.cooldown(100,86400,commands.BucketType.guild)
-async def warn(ctx, member : discord.Member , *, reason):
-  db[str(ctx.guild.id)+"_"+str(member.id)+"_warnings"] = db[str(ctx.guild.id)+"_"+str(member.id)+"_warnings"] + ("||Warn: " + reason + " Moderator: " + ctx.author.name + "|| ** **")
-  await ctx.send(db[str(ctx.guild.id)+"_"+str(member.id)+"_warnings"])
+async def warn(ctx, member : discord.Member , *, reason="None"):
+  db_keys = db.keys()
+  key = (str(ctx.guild.id)+"_"+str(member.id)+"_warnings")
+  warning = ("||Reason: " + reason + "; Moderator: " + ctx.author.name + "|| ** ** ** **")
+  if key in db_keys:
+    prevwarnings=db[key]
+    currwarnings=prevwarnings+warning
+    db[key]=currwarnings
+    await ctx.send(db[key])
+  else:
+    db[key]=warning
+    await ctx.send(db[key])
+
+#warnings
+@bot.command(name='warnings', description="Checks the warnings of a user")
+@has_permissions(kick_members=True)
+@commands.cooldown(100,86400,commands.BucketType.guild)
+async def warnings(ctx, member : discord.Member):
+  key=(str(ctx.guild.id)+"_"+str(member.id)+"_warnings")
+  await ctx.send(member.name + "'s warnings: " + db[key])
+
+#clearwarn
+@bot.command(name='clearwarn', description='Clears a users warnings')
+@has_permissions(kick_members=True)
+@commands.cooldown(100,86400,commands.BucketType.guild)
+async def clearwarn(ctx, member : discord.Member):
+  key=(str(ctx.guild.id)+"_"+str(member.id)+"_warnings")
+  del db[key]
+  await ctx.send("Cleared **" + member.name + "**'s warnings")
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
