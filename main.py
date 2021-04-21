@@ -146,6 +146,7 @@ async def warn(ctx, member : discord.Member , *, reason="None"):
   else:
     db[key]=warning
     await ctx.send(db[key])
+  await member.send("You have been warned in **" + ctx.guild.name + "** for **" + reason + "** by **" + ctx.author.name + "**")
 
 #warnings
 @bot.command(name='warnings', description="Checks the warnings of a user")
