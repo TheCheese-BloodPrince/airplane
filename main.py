@@ -170,6 +170,12 @@ async def clearwarn(ctx, member : discord.Member):
 @commands.cooldown(1,5, commands.BucketType.member)
 async def avatar(ctx):
   await ctx.send(ctx.author.avatar_url)
+
+#membercount
+@bot.command(name='membercount', description="Sends the amount of members in the guild.")
+@commands.cooldown(1,5, commands.BucketType.member)
+async def membercount(ctx):
+  await ctx.send("Members in **"+ctx.guild.name+"**: " + str(ctx.guild.member_count))
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
