@@ -38,9 +38,7 @@ async def ban(ctx, member : discord.Member, *, reason="None"):
 #+info
 @bot.command(name='info', description='Information about airplane.')
 async def info(ctx):
-  await ctx.send("airplane is a Discord bot by The Cheese-Blood Prince#0505")
-  await ctx.send("Contributors:")
-  await ctx.send("https://github.com/TheCheese-BloodPrince")
+  await ctx.send("airplane is a Discord bot by The Cheese-Blood Prince#0505\nContributors:\nhttps://github.com/TheCheese-BloodPrince")
 
 #+afk
 @bot.command(name='afk', description='Sets the user to afk.')
