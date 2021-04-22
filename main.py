@@ -336,6 +336,7 @@ async def buy(ctx, *, item):
 
 #+code
 @bot.command(name='code', description="Allows you to code to earn money. The better laptop you have, the more money you earn.")
+@commands.cooldown(1,3600,commands.BucketType.user())
 async def code(ctx):
   await ctx.send("Coding...")
   pay = random.randint(0, db[str(ctx.author.id)+"_revenue"])
