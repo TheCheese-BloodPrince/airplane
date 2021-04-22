@@ -193,28 +193,16 @@ async def give(ctx, member : discord.Member, amount):
 @bot.command(name='shop', description="Shows all the items on market. Run +shop laptops to see available laptops.")
 async def shop(ctx, *, item):
   if item == "laptops":
-    await ctx.send("These are the laptops in stock:")
-    await ctx.send("Cheap Cheesett-Packard: $210; ID=1")
-    await ctx.send("Cheap CheesePad: $250; ID=2")
-    await ctx.send("Cheap Cheese-Soft: $400; ID=3")
-    await ctx.send("Cheap Cheesy-Goldstar: $800; ID=4")
-    await ctx.send("CheeseBook Air: $1000; ID=5")
-    await ctx.send("Professional Cheese-Soft: $1400; ID=6")
-    await ctx.send("Professional Cheesett-Packard: $1670; ID=7")
-    await ctx.send("Professional Cheesy-Goldstar: $1900; ID=8")
-    await ctx.send("CheeseBook Pro: $2400; ID=9")
-    await ctx.send("Professional Bell: $4110; ID=10")
-    await ctx.send("Professional Cheeser: $4300; ID=11")
-    await ctx.send("Professional CheesePad: $4660; ID=12")
+    await ctx.send("These are the laptops in stock:\nCheap Cheesett-Packard: $210; ID=1\nCheap CheesePad: $250; ID=2\nCheap Cheese-Soft: $400; ID=3\nCheap Cheesy-Goldstar: $800; ID=4\nCheeseBook Air: $1000; ID=5\nProfessional Cheese-Soft: $1400; ID=6\nProfessional Cheesett-Packard: $1670; ID=7\nProfessional Cheesy-Goldstar: $1900; ID=8\nCheeseBook Pro: $2400; ID=9\nProfessional Bell: $4110; ID=10\nProfessional Cheeser: $4300; ID=11\nProfessional CheesePad: $4660; ID=12")
+  elif item == "collectibles":
+    await ctx.send("These are the collectibles in stock:\nModel Train: $35; ID=13")
   else:
     await ctx.send("Sorry, this item is not in stock.")
 
 #+profile
 @bot.command(name='profile', description="Allows you to view your profile.")
 async def profile(ctx):
-  await ctx.send("Name: **"+ctx.author.name+"**")
-  await ctx.send("Networth: **"+str(db[str(ctx.author.id)+"_networth"])+"**")
-  await ctx.send("Laptop ID: **"+str(db[str(ctx.author.id)+"_laptop"])+"**")
+  await ctx.send("Name: **"+ctx.author.name+"**\nNetworth: **"+str(db[str(ctx.author.id)+"_networth"])+"**\nLaptop ID: **"+str(db[str(ctx.author.id)+"_laptop"])+"**")
 
 #+buy
 @bot.command(name='buy', description='Allows you to buy an item. Example: +buy 9')
@@ -331,12 +319,19 @@ async def buy(ctx, *, item):
       db[networth_key] = int(db[networth_key]) + int(4660)
       db[bank_key] -= 4660
       await ctx.send("**"+ctx.author.name+"** has bought the Professional CheesePad")
+  elif item == "13":
+    if int(db[bank_key])<=35:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[networth_key] = int(db[networth_key]) + int(35)
+      db[bank_key] -= 35
+      await ctx.send("**"+ctx.author.name+"** has bought a model train.")
   else:
     await ctx.send("That item is not in stock.")
 
 #+code
 @bot.command(name='code', description="Allows you to code to earn money. The better laptop you have, the more money you earn.")
-@commands.cooldown(1,3600,commands.BucketType.user())
+@commands.cooldown(1,60,commands.BucketType.user)
 async def code(ctx):
   await ctx.send("Coding...")
   pay = random.randint(0, db[str(ctx.author.id)+"_revenue"])
