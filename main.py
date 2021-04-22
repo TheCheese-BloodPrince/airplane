@@ -125,7 +125,7 @@ async def tempban(ctx, member : discord.Member):
 async def warn(ctx, member : discord.Member , *, reason="None"):
   db_keys = db.keys()
   key = (str(ctx.guild.id)+"_"+str(member.id)+"_warnings")
-  warning = ("||Reason: " + reason + "; Moderator: " + ctx.author.name + "|| ** ** ** **")
+  warning = ("Reason: " + reason + " Moderator: " + ctx.author.name + "\n")
   if key in db_keys:
     prevwarnings=db[key]
     currwarnings=prevwarnings+warning
@@ -335,9 +335,8 @@ async def buy(ctx, *, item):
 async def code(ctx):
   await ctx.send("Coding...")
   pay = random.randint(0, db[str(ctx.author.id)+"_revenue"])
-  data = ["an operating system!", "a reading app!", "a team planning app!", "a video game!", "a chatting app!", "a Discord bot!", "a video chatting app!", "a GPS app!", "a coding platform!", "a web browser!", "a search engine!", "a website!", "a video editor!", "a music platform!", "a news platform!", "a note taking app!", "a coding language!", "a stock tracker!"]
-  await ctx.send("You made " + random.choice(data))
-  await ctx.send("You earnt " + str(random.randint(0, pay)) + "!")
+  data = ["an operating system!\n", "a reading app!\n", "a team planning app!\n", "a video game!\n", "a chatting app!\n", "a Discord bot!\n", "a video chatting app!\n", "a GPS app!\n", "a coding platform!\n", "a web browser!\n", "a search engine!\n", "a website!\n", "a video editor!\n", "a music platform!\n", "a news platform!\n", "a note taking app!\n", "a coding language!\n", "a stock tracker!\n"]
+  await ctx.send("You made " + random.choice(data) + "You earnt " + str(pay) + " coins!")
   db[str(ctx.author.id)+"_bank"] += pay
 
 #Running the Bot
