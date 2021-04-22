@@ -193,7 +193,7 @@ async def shop(ctx, *, item):
   if item == "laptops":
     await ctx.send("These are the laptops in stock:\nCheap Cheesett-Packard: $210; ID=1\nCheap CheesePad: $250; ID=2\nCheap Cheese-Soft: $400; ID=3\nCheap Cheesy-Goldstar: $800; ID=4\nCheeseBook Air: $1000; ID=5\nProfessional Cheese-Soft: $1400; ID=6\nProfessional Cheesett-Packard: $1670; ID=7\nProfessional Cheesy-Goldstar: $1900; ID=8\nCheeseBook Pro: $2400; ID=9\nProfessional Bell: $4110; ID=10\nProfessional Cheeser: $4300; ID=11\nProfessional CheesePad: $4660; ID=12")
   elif item == "collectibles":
-    await ctx.send("These are the collectibles in stock:\nModel Train: $35; ID=13")
+    await ctx.send("These are the collectibles in stock:\nModel Train: $35; ID=13\nAirplane: $4500000")
   else:
     await ctx.send("Sorry, this item is not in stock.")
 
@@ -324,6 +324,9 @@ async def buy(ctx, *, item):
       db[networth_key] = int(db[networth_key]) + int(35)
       db[bank_key] -= 35
       await ctx.send("**"+ctx.author.name+"** has bought a model train.")
+  elif item == "14":
+    if int(db[bank_key])<=4500000:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
   else:
     await ctx.send("That item is not in stock.")
 
@@ -336,6 +339,11 @@ async def code(ctx):
   data = ["an operating system!\n", "a reading app!\n", "a team planning app!\n", "a video game!\n", "a chatting app!\n", "a Discord bot!\n", "a video chatting app!\n", "a GPS app!\n", "a coding platform!\n", "a web browser!\n", "a search engine!\n", "a website!\n", "a video editor!\n", "a music platform!\n", "a news platform!\n", "a note taking app!\n", "a coding language!\n", "a stock tracker!\n"]
   await ctx.send("You made " + random.choice(data) + "You earnt " + str(pay) + " coins!")
   db[str(ctx.author.id)+"_bank"] += pay
+
+#roll
+@bot.command(name='roll', description="Rolls a die.")
+async def roll(ctx):
+  await ctx.send(str(random.randint(1,6)))
 
 #Running the Bot
 keep_alive()
