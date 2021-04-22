@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 from keep_alive import keep_alive
 from discord.ext.commands import has_permissions
 from replit import db
+import random
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 bot = commands.Bot(command_prefix='+')
-
 @bot.event
 async def on_ready():
   print("airplane has started up; Can now execute commands.")
@@ -22,7 +22,6 @@ async def on_ready():
 #+kick
 @bot.command(name='kick', description='Kick a troublesome user.')
 @has_permissions(kick_members=True)  
-@commands.cooldown(100,86400,commands.BucketType.guild)
 async def kick(ctx, member : discord.Member, *, reason="None"):
   await member.send("You have been kicked in " + ctx.guild.name + " for: " + reason + ". You can rejoin if you obtain an invite.")
   await member.kick(reason = reason)
@@ -31,7 +30,6 @@ async def kick(ctx, member : discord.Member, *, reason="None"):
 #+ban
 @bot.command(name='ban', description = 'Ban a troublesome user.')
 @has_permissions(ban_members=True)
-@commands.cooldown(100,86400,commands.BucketType.guild)
 async def ban(ctx, member : discord.Member, *, reason="None"):
   await member.send("You have been banned in " + ctx.guild.name + " for: " + reason + ". You cannot rejoin unless unbanned.")
   await member.ban(reason=reason)
@@ -39,7 +37,6 @@ async def ban(ctx, member : discord.Member, *, reason="None"):
 
 #+info
 @bot.command(name='info', description='Information about airplane.')
-@commands.cooldown(1,5,commands.BucketType.user)
 async def info(ctx):
   await ctx.send("airplane is a Discord bot by The Cheese-Blood Prince#0505")
   await ctx.send("Contributors:")
@@ -47,7 +44,6 @@ async def info(ctx):
 
 #+afk
 @bot.command(name='afk', description='Sets the user to afk.')
-@commands.cooldown(1,30,commands.BucketType.user)
 async def afk(ctx, *, reason):
   await ctx.send("**"+ctx.author.name+"** is AFK: " + reason)
   if ctx.author.nick == None:
@@ -61,7 +57,6 @@ async def afk(ctx, *, reason):
 
 #+back
 @bot.command(name='back', description="Removes the user's afk.")
-@commands.cooldown(1,30,commands.BucketType.user)
 async def back(ctx):
   await ctx.send("**"+ctx.author.name+"** is back! *attempts to smile*")
   await ctx.author.edit(nick=db[str(ctx.author.id)+"_nick"])
@@ -70,20 +65,17 @@ async def back(ctx):
 #+purge
 @bot.command(name='purge', description="Purges a certain amount of messages.")
 @has_permissions(manage_messages=True)
-@commands.cooldown(1,60,commands.BucketType.guild)
 async def purge(ctx, amount):
   await ctx.channel.purge(limit=int(amount))
 
 #+dev
 @bot.command(name='dev', description="Gives people the link to the GitHub so they can help build the bot.")
-@commands.cooldown(1,5,commands.BucketType.user)
 async def dev(ctx):
   await ctx.send("Thank you for your interest in helping airplane! You can help the airplane project here: https://github.com/TheCheese-BloodPrince/airplane")
 
 #+mute
 @bot.command(name='mute', description="Mutes a user SHUT THE HELL UP")
 @has_permissions(manage_messages=True)
-@commands.cooldown(100,86400,commands.BucketType.guild)
 async def mute(ctx, member : discord.Member, *, reason="None"):
   muted = discord.utils.get(ctx.guild.roles, name="Muted")
   await member.add_roles(muted)
@@ -93,7 +85,6 @@ async def mute(ctx, member : discord.Member, *, reason="None"):
 #+unmute
 @bot.command(name='unmute', description="Unmuted the user they have served their sentence.")
 @has_permissions(manage_messages=True)
-@commands.cooldown(100,86400,commands.BucketType.guild)
 async def unmute(ctx, member : discord.Member):
   muted = discord.utils.get(ctx.guild.roles, name="Muted")
   await member.remove_roles(muted)
@@ -103,7 +94,6 @@ async def unmute(ctx, member : discord.Member):
 #+unban
 @bot.command(name='unban', description="Allows you to unban a user maybe they were good boi after all")
 @has_permissions(ban_members=True)
-@commands.cooldown(100,86400,commands.BucketType.guild)
 async def unban(ctx, *, member):
   banned_users = await ctx.guild.bans()
   for banned_entry in banned_users:
@@ -118,7 +108,6 @@ async def unban(ctx, *, member):
 #+tempban
 @bot.command(name='tempban', description="Allows you to ban and then immediatly unban a user to delete all their messages in the past 24 hours.")
 @has_permissions(kick_members=True)
-@commands.cooldown(100,86400,commands.BucketType.guild)
 async def tempban(ctx, member : discord.Member):
   await member.send("You have been temporarily banned in " + ctx.guild.name + " to wipe all your messages in the past 24 hours. Ask an admin to give you an invite as you have now been unbanned.")
   await ctx.guild.ban(member)
@@ -133,7 +122,6 @@ async def tempban(ctx, member : discord.Member):
 #+warn
 @bot.command(name='warn', description="Allows you to warn a user.")
 @has_permissions(kick_members=True)
-@commands.cooldown(100,86400,commands.BucketType.guild)
 async def warn(ctx, member : discord.Member , *, reason="None"):
   db_keys = db.keys()
   key = (str(ctx.guild.id)+"_"+str(member.id)+"_warnings")
@@ -151,7 +139,6 @@ async def warn(ctx, member : discord.Member , *, reason="None"):
 #+warnings
 @bot.command(name='warnings', description="Checks the warnings of a user")
 @has_permissions(kick_members=True)
-@commands.cooldown(100,86400,commands.BucketType.guild)
 async def warnings(ctx, member : discord.Member):
   key=(str(ctx.guild.id)+"_"+str(member.id)+"_warnings")
   await ctx.send(member.name + "'s warnings: " + db[key])
@@ -159,7 +146,6 @@ async def warnings(ctx, member : discord.Member):
 #+clearwarn
 @bot.command(name='clearwarn', description='Clears a users warnings')
 @has_permissions(kick_members=True)
-@commands.cooldown(100,86400,commands.BucketType.guild)
 async def clearwarn(ctx, member : discord.Member):
   key=(str(ctx.guild.id)+"_"+str(member.id)+"_warnings")
   del db[key]
@@ -167,48 +153,24 @@ async def clearwarn(ctx, member : discord.Member):
 
 #+avatar
 @bot.command(name='avatar', description="Sends a user's avatar")
-@commands.cooldown(1,5, commands.BucketType.member)
 async def avatar(ctx):
   await ctx.send(ctx.author.avatar_url)
 
 #+membercount
 @bot.command(name='membercount', description="Sends the amount of members in the guild.")
-@commands.cooldown(1,5, commands.BucketType.member)
 async def membercount(ctx):
   await ctx.send("Members in **"+ctx.guild.name+"**: " + str(ctx.guild.member_count))
 
-#+hp99
-@bot.command(name='hp99', description="Sings Harry Potter in 99 Seconds by PAINT")
-@commands.cooldown(1,99,commands.BucketType.guild)
-async def hp99(ctx):
-  await ctx.send("THERE ONCE WAS A BOY NAMED HARRY DESTINED TO BE A STAR HIS PARENTS WERE KILLED BY VOLDEMORT WHO GAVE HIM HIS LIGHTNING SCAR YO HARRY YER A WIZARD DOODOODOODOODOODOODOODOODOODOOODOODOODOODOODOODOO HARRY GOES TO HOGWARTS HE MEETS RON AND HERMIONE MCGONAGALL REQUIRES THAT HE PLAYS FOR GRYFFINDOR DRACO IS A DADDY'S BOY QUIRRELL BECOMES UNEMPLOYED AND THE SORCERER'S STONE IS DESTROYED BY DUMBLEDORE")
-  await ctx.send("RON BREAKS HIS WAND NOW GINNY'S GONE AND HARRY'S IN MORTAL DANGER TOM RIDDLE HIDES HIS SNAKE INSIDE HIS GINORMOUS SECRET CHAMBER")
-  await ctx.send("HARRY BLOWS UP AUNT MARGE THE DEMENTORS COME AND TAKE CHARGE LUPIN IS A WOLF THE RAT'S A MAN AND NOW THE PRISONER IS AT LARGE THEY USE TIME TRAVEL SO THEY CAN SAVE THE PRISONER OF AZKABAN WHO JUST SO HAPPENS TO BE HARRY'S GODFATHER I DON'T REALLY GET IT EITHER")
-  await ctx.send("HARRY GETS PUT INTO THE TRIWIZARD TOURNAMENT DRAGONS AND MERMAIDS OH NO EDWARD CULLEN GETS SLAYED HE'S BACK")
-  await ctx.send("HARRY HARRY ITS GETTING SCARY VOLDEMORT'S BACK YOU'REA REVOLUTIONARY HARRY DUMBLEDORE DUMBLEDORE WHY IS HE IGNORING YOUR CONSTANT ATTEMPTS TO CONTACT HIM HE IS FORCED TO LEAVE THE SCHOOL UMBRIDGE ARRIVES DRACO'S A TOOL KIDS BREAK INTO THE MINISTRY AND SIRIUS BLACK IS DEAD AS CAN BE OHHHHHH")
-  await ctx.send("SPLIT YOUR SOUL SEVEN PARTS OF A WHOLE THEY'RE HORCRUXES IT'S DUMBELDORE'S END DOODOODOODOODOODOODOO")
-  await ctx.send("THERE ONCE WAS A BOY NAMED HARRY WHO CONSTANTLY CONQUERED DEATH BUT IN ONE FINAL DUEL BETWEEN GOOD AND BAD HE MAY TAKE HIS FINAL BREATH...")
-  await ctx.send("P A I N T SUBSCRIBE")
 
-#+never
-@bot.command(name='never', description="Sings Never Gonna Give you Up by Rick Astley")
-@commands.cooldown(1,212, commands.BucketType.guild)
-async def never(ctx):
-  await ctx.send(("We're no strangers to love You know the rules and so do I A full commitment's what I'm thinking of You wouldn't get this from any other guy").upper())
-  await ctx.send(("I just wanna tell you how I'm feeling Gotta make you understand").upper())
-  await ctx.send(("Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you").upper())
-  await ctx.send(("We've known each other for so long Your heart's been aching, but you're too shy to say it Inside, we both know what's been going on We know the game, and we're gonna play it").upper())
-  await ctx.send(("And if you ask me how I'm feeling Don't tell me you're too blind to see").upper())
-  await ctx.send(("Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you").upper())
-  await ctx.send(("Ooh (Give you up) Ooh-ooh (Give you up) Ooh-ooh Never gonna give, never gonna give (Give you up) Ooh-ooh Never gonna give, never gonna give (Give you up)").upper())
-  await ctx.send(("We've known each other for so long Your heart's been aching, but you're too shy to say it Inside, we both know what's been going on We know the game, and we're gonna play it").upper())
-  await ctx.send(("I just wanna tell you how I'm feeling Gotta make you understand").upper())
-  await ctx.send(("Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you").upper())
+
 
 #+register
-@bot.command(name='register', description="Registers you for a currency account in airplane. Remember this wipes your account balance to 0 coins.")
+@bot.command(name='register', description="Registers you for a currency account in airplane. Remember this wipes all of your progress if you have already used the currency system before. If you want to be careful, run +balance and if nothing is outputted, it is safe to run this.")
 async def register(ctx):
-  db[str(ctx.author.id)+"_bank"]=0
+  db[str(ctx.author.id)+"_bank"]=int(0)
+  db[str(ctx.author.id)+"_networth"]=int(200)
+  db[str(ctx.author.id)+"_revenue"]=int(20)
+  db[str(ctx.author.id)+"_laptop"]=int(0)
   await ctx.send("Registered **" + ctx.author.name + "** for a currency account.")
 
 #+balance
@@ -226,6 +188,162 @@ async def give(ctx, member : discord.Member, amount):
     await ctx.send("**" + ctx.author.name + "** has given **" + member.name + "** **" + str(amount) + "** coins.")
   else:
     await ctx.send("Did you really try that?")
+  
+#+shop
+@bot.command(name='shop', description="Shows all the items on market. Run +shop laptops to see available laptops.")
+async def shop(ctx, *, item):
+  if item == "laptops":
+    await ctx.send("These are the laptops in stock:")
+    await ctx.send("Cheap Cheesett-Packard: $210; ID=1")
+    await ctx.send("Cheap CheesePad: $250; ID=2")
+    await ctx.send("Cheap Cheese-Soft: $400; ID=3")
+    await ctx.send("Cheap Cheesy-Goldstar: $800; ID=4")
+    await ctx.send("CheeseBook Air: $1000; ID=5")
+    await ctx.send("Professional Cheese-Soft: $1400; ID=6")
+    await ctx.send("Professional Cheesett-Packard: $1670; ID=7")
+    await ctx.send("Professional Cheesy-Goldstar: $1900; ID=8")
+    await ctx.send("CheeseBook Pro: $2400; ID=9")
+    await ctx.send("Professional Bell: $4110; ID=10")
+    await ctx.send("Professional Cheeser: $4300; ID=11")
+    await ctx.send("Professional CheesePad: $4660; ID=12")
+  else:
+    await ctx.send("Sorry, this item is not in stock.")
+
+#+profile
+@bot.command(name='profile', description="Allows you to view your profile.")
+async def profile(ctx):
+  await ctx.send("Name: **"+ctx.author.name+"**")
+  await ctx.send("Networth: **"+str(db[str(ctx.author.id)+"_networth"])+"**")
+  await ctx.send("Laptop ID: **"+str(db[str(ctx.author.id)+"_laptop"])+"**")
+
+#+buy
+@bot.command(name='buy', description='Allows you to buy an item. Example: +buy 9')
+async def buy(ctx, *, item):
+  networth_key=(str(ctx.author.id)+"_networth")
+  laptop_key=(str(ctx.author.id)+"_laptop")
+  revenue_key=(str(ctx.author.id)+"_revenue")
+  bank_key = (str(ctx.author.id)+"_bank")
+  if item == "1":
+    if int(db[bank_key])<=210:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 1
+      db[revenue_key] = 21
+      db[networth_key] = int(db[networth_key]) + int(210)
+      db[bank_key] -= 210
+      await ctx.send("**"+ctx.author.name+"** has bought the Cheap Cheesett-Packard.")
+  elif item == "2":
+    if int(db[bank_key])<=250:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 2
+      db[revenue_key] = 24
+      db[networth_key] = int(db[networth_key]) + int(250)
+      db[bank_key] -= 250
+      await ctx.send("**"+ctx.author.name+"** has bought the Cheap CheesePad.")
+  elif item == "3":
+    if int(db[bank_key])<=400:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 3
+      db[revenue_key] = 40
+      db[networth_key] = int(db[networth_key]) + int(400)
+      db[bank_key] -= 400
+      await ctx.send("**"+ctx.author.name+"** has bought the Cheap Cheese-Soft.")
+  elif item == "4":
+    if int(db[bank_key])<=800:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 4
+      db[revenue_key] = 80
+      db[networth_key] = int(db[networth_key]) + int(800)
+      db[bank_key] -= 800
+      await ctx.send("**"+ctx.author.name+"** has bought the Cheap Cheesy-Goldstar")
+  elif item == "5":
+    if int(db[bank_key])<=1000:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 5
+      db[revenue_key] = 100
+      db[networth_key] = int(db[networth_key]) + int(1000)
+      db[bank_key] -= 1000
+      await ctx.send("**"+ctx.author.name+"** has bought the CheeseBook Air")
+  elif item == "6":
+    if int(db[bank_key])<=1400:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 6
+      db[revenue_key] = 140
+      db[networth_key] = int(db[networth_key]) + int(1400)
+      db[bank_key] -= 1400
+      await ctx.send("**"+ctx.author.name+"** has bought the Professional Cheese-Soft")
+  elif item == "7":
+    if int(db[bank_key])<=1670:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 7
+      db[revenue_key] = 167
+      db[networth_key] = int(db[networth_key]) + int(1670)
+      db[bank_key] -= 1670
+      await ctx.send("**"+ctx.author.name+"** has bought the Professional Cheesett-Packard")
+  elif item == "8":
+    if int(db[bank_key])<=1900:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 8
+      db[revenue_key] = 190
+      db[networth_key] = int(db[networth_key]) + int(1900)
+      db[bank_key] -= 1900
+      await ctx.send("**"+ctx.author.name+"** has bought the Professional Cheesy-Goldstar")
+  elif item == "9":
+    if int(db[bank_key])<=2400:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 9
+      db[revenue_key] = 240
+      db[networth_key] = int(db[networth_key]) + int(2400)
+      db[bank_key] -= 2400
+      await ctx.send("**"+ctx.author.name+"** has bought the CheeseBook Pro")
+  elif item == "10":
+    if int(db[bank_key])<=4110:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 10
+      db[revenue_key] = 411
+      db[networth_key] = int(db[networth_key]) + int(4110)
+      db[bank_key] -= 4100
+      await ctx.send("**"+ctx.author.name+"** has bought the Professional Bell")
+  elif item == "11":
+    if int(db[bank_key])<=4300:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 11
+      db[revenue_key] = 430
+      db[networth_key] = int(db[networth_key]) + int(4300)
+      db[bank_key] -= 4300
+      await ctx.send("**"+ctx.author.name+"** has bought the Professional Cheeser")
+  elif item == "12":
+    if int(db[bank_key])<=4660:
+      await ctx.send("You don't have enough money to buy that! Run +code to code to earn money.")
+    else:
+      db[laptop_key] = 12
+      db[revenue_key] = 466
+      db[networth_key] = int(db[networth_key]) + int(4660)
+      db[bank_key] -= 4660
+      await ctx.send("**"+ctx.author.name+"** has bought the Professional CheesePad")
+  else:
+    await ctx.send("That item is not in stock.")
+
+#+code
+@bot.command(name='code', description="Allows you to code to earn money. The better laptop you have, the more money you earn.")
+async def code(ctx):
+  await ctx.send("Coding...")
+  pay = random.randint(0, db[str(ctx.author.id)+"_revenue"])
+  data = ["an operating system!", "a reading app!", "a team planning app!", "a video game!", "a chatting app!", "a Discord bot!", "a video chatting app!", "a GPS app!", "a coding platform!", "a web browser!", "a search engine!", "a website!", "a video editor!", "a music platform!", "a news platform!", "a note taking app!", "a coding language!", "a stock tracker!"]
+  await ctx.send("You made " + random.choice(data))
+  await ctx.send("You earnt " + str(random.randint(0, pay)) + "!")
+  db[str(ctx.author.id)+"_bank"] += pay
+
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
