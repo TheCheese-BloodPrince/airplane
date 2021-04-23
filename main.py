@@ -340,11 +340,36 @@ async def code(ctx):
   await ctx.send("You made " + random.choice(data) + "You earnt " + str(pay) + " coins!")
   db[str(ctx.author.id)+"_bank"] += pay
 
-#roll
+#+roll
 @bot.command(name='roll', description="Rolls a die.")
 async def roll(ctx):
   await ctx.send(str(random.randint(1,6)))
 
+#+rps
+@bot.command(name='rps', description="Plays rock paper scissors with the bot.")
+async def rps(ctx, choice):
+  botoptions=["rock", "paper", "scissors"]
+  botchoice=random.choice(botoptions)
+  if choice.lower() == "rock" and botchoice == "rock":
+    await ctx.send("The member chose rock and the bot chose rock. It is a tie.")
+  elif choice.lower() == "rock" and botchoice == "paper":
+    await ctx.send("The member chose rock and the bot chose paper. The bot wins.")
+  elif choice.lower() == "rock" and botchoice == "scissors":
+    await ctx.send("The member chose rock and the bot chose scissors. The member wins.")
+  elif choice.lower() == "paper" and botchoice == "rock":
+    await ctx.send("The member chose paper and the bot chose rock. The member wins.")
+  elif choice.lower() == "paper" and botchoice == "paper":
+    await ctx.send("The member chose paper and the bot chose paper. It is a tie.")
+  elif choice.lower() == "paper" and botchoice == "scissors":
+    await ctx.send("The member chose paper and the bot chose scissors. The bot wins.")
+  elif choice.lower() == "scissors" and botchoice == "rock":
+    await ctx.send("The member chose scissors and the bot chose rock. The bot wins.")
+  elif choice.lower() == "scissors" and botchoice == "paper":
+    await ctx.send("The member chose scissors and the bot chose paper. The member wins.")
+  elif choice.lower() == "scissors" and botchoice == "scissors":
+    await ctx.send("The member chose scissors and the bot chose scissors. It is a tie.")
+  else:
+    await ctx.send("You need to send 'rock', 'paper', or 'scissors'")
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
