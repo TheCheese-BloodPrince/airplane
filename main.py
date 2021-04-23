@@ -42,7 +42,7 @@ async def info(ctx):
 
 #+afk
 @bot.command(name='afk', description='Sets the user to afk.')
-async def afk(ctx, *, reason):
+async def afk(ctx, *, reason="AFK"):
   await ctx.send("**"+ctx.author.name+"** is AFK: " + reason)
   if ctx.author.nick == None:
     await ctx.author.edit(nick=("[AFK]"+ctx.author.name))
@@ -370,6 +370,11 @@ async def rps(ctx, choice):
     await ctx.send("The member chose scissors and the bot chose scissors. It is a tie.")
   else:
     await ctx.send("You need to send 'rock', 'paper', or 'scissors'")
+
+#+github
+@bot.command(name='github', description="Sends a GitHub profile/repository\n+github TheCheese-BloodPrince\n+github TheCheese-BloodPrince/airplane")
+async def github(ctx, repo):
+  await ctx.send("https://github.com/"+repo)
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
