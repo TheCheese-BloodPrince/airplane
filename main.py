@@ -7,18 +7,16 @@ from keep_alive import keep_alive
 from discord.ext.commands import has_permissions
 from replit import db
 import random
-
- # Load ENV
+import json
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 bot = commands.Bot(command_prefix='+')
-
-# On Ready
-
 @bot.event
 async def on_ready():
   print("airplane has started up; Can now execute commands.")
-  await bot.change_presence(activity=discord.Game(name='+help'))
+
+
+
 
 #Commands
 
@@ -184,9 +182,12 @@ async def balance(ctx):
 @bot.command(name='give', description="Allows a user to give another user money.")
 async def give(ctx, member : discord.Member, amount):
   if int(amount) >= 0:
-    db[str(member.id)+"_bank"] += int(amount)
-    db[str(ctx.author.id)+"_bank"] -= int(amount)
-    await ctx.send("**" + ctx.author.name + "** has given **" + member.name + "** **" + str(amount) + "** coins.")
+    if db[str(ctx.author.id)+"_bank"] <= int(amount):
+      await ctx.send("You don't have that much money!")
+    else:
+      db[str(member.id)+"_bank"] += int(amount)
+      db[str(ctx.author.id)+"_bank"] -= int(amount)
+      await ctx.send("**" + ctx.author.name + "** has given **" + member.name + "** **" + str(amount) + "** coins.")
   else:
     await ctx.send("Did you really try that?")
   
@@ -378,6 +379,11 @@ async def rps(ctx, choice):
 @bot.command(name='github', description="Sends a GitHub profile/repository\n+github TheCheese-BloodPrince\n+github TheCheese-BloodPrince/airplane")
 async def github(ctx, repo):
   await ctx.send("https://github.com/"+repo)
+
+
+
+
+
 #Running the Bot
 keep_alive()
 bot.run(TOKEN)
