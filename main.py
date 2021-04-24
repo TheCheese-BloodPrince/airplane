@@ -7,15 +7,18 @@ from keep_alive import keep_alive
 from discord.ext.commands import has_permissions
 from replit import db
 import random
+
+ # Load ENV
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 bot = commands.Bot(command_prefix='+')
+
+# On Ready
+
 @bot.event
 async def on_ready():
   print("airplane has started up; Can now execute commands.")
-
-
-
+  await bot.change_presence(activity=discord.Game(name='+help'))
 
 #Commands
 
