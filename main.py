@@ -11,6 +11,7 @@ import json
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 bot = commands.Bot(command_prefix='+')
+bot.remove_command('help')
 @bot.event
 async def on_ready():
   print("airplane has started up; Can now execute commands.")
@@ -19,6 +20,14 @@ async def on_ready():
 
 
 #Commands
+# Help
+@bot.command()
+async def help(ctx):
+  embedVar = discord.Embed(title="Whelcome To Airplane!")
+  embedVar.add_field(name = '`!help mod`', value = 'Use This To See My Moderation Commands')
+  embedVar.add_field(name = '`!help economy`', value = 'Use This To See My Economy Commands')
+  await ctx.send(embed = embedVar)
+# I Will Add The Sub Commands Later
 
 #+kick
 @bot.command(name='kick', description='Kick a troublesome user.')
