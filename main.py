@@ -23,11 +23,15 @@ async def on_ready():
 # Help
 @bot.command()
 async def help(ctx):
-  embedVar = discord.Embed(title="Whelcome To Airplane!")
+  embedVar = discord.Embed(title="Welcome To Airplane!")
   embedVar.add_field(name = '`!help mod`', value = 'Use This To See My Moderation Commands')
   embedVar.add_field(name = '`!help economy`', value = 'Use This To See My Economy Commands')
   await ctx.send(embed = embedVar)
 # I Will Add The Sub Commands Later
+
+
+
+
 
 #+kick
 @bot.command(name='kick', description='Kick a troublesome user.')
